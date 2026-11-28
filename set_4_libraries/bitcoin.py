@@ -13,14 +13,21 @@ def get_coins():
 
 def retrieve_price(api_key):
     payload = {'api_key': api_key}
-    bitcoin_url = 'rest.coincap.io/v3/assets/bitcoin'
+    bitcoin_url = 'https://rest.coincap.io/v3/assets/bitcoin'
     try:
         response = rq.get(bitcoin_url, params=payload).json()
     except Exception:
-        
+        sys.exit('The api call failed.')
+    return float(response.get('data').get('priceUsd'))
+    # TODO: Having an issue with the handling of the json object that was parsed and assigned to the response variable
 
 
 def main():
     num_coins = get_coins()
     api_key = '253af39f58f3cee3e1b60b7762203f79ca89cc69abff59488d4773e868a14fa3'
     current_price = retrieve_price(api_key)
+    total_price = num_coins * current_price
+    print(f'${total_price:,.4f}')
+
+if __name__ == '__main__':
+    main()
